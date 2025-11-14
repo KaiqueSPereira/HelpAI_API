@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.helpai_backend.entity.Usuario;
+import com.example.helpai_backend.repository.UsuarioRepository;
 
 import java.util.Map;
 import java.util.Optional;

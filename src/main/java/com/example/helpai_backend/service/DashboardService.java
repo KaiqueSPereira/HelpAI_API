@@ -1,4 +1,4 @@
-// Em src/main/java/com/example/helpai-backend/service/DashboardService.java
+// Em src/main/java/com/example/helpai_backend/service/DashboardService.java
 package com.example.helpai_backend.service;
 
 import com.example.helpai_backend.dto.DashboardStatsDTO;
@@ -19,19 +19,23 @@ public class DashboardService {
         Integer inProgressCount = chamadoRepository.countInProgressTickets();
         Integer totalCount = chamadoRepository.countTotalTickets();
 
-        // 2. CORREÇÃO CRÍTICA: Garante que os valores NULL sejam tratados como 0 (ZERO)
+       
         if (openCount == null) openCount = 0;
         if (priorityCount == null) priorityCount = 0;
         if (inProgressCount == null) inProgressCount = 0;
-        if (totalCount == null) totalCount = 0;
-
-        // 3. Lógica de Negócio (cálculo de porcentagem)
-        int progressPercentage = 0;
-        if (totalCount > 0) {
-            progressPercentage = (inProgressCount * 100) / totalCount;
+        if (totalCount == null || totalCount == 0) {
+            totalCount = 0;
         }
 
-        // 4. Retorna o DTO com os resultados
+        // 2. Lógica de Negócio
+        int progressPercentage = 0;
+        if (totalCount > 0) {
+            // A porcentagem de progresso será 'Chamados em Atendimento' / 'Total'
+            // (Multiplicamos por 100.0 para garantir a divisão de decimal)
+            progressPercentage = (int) ((inProgressCount * 100.0) / totalCount);
+        }
+
+        // 3. Retorna o DTO com os resultados (ex: {"abertas": 12, "prioritarias": 3, "progresso": 21})
         return new DashboardStatsDTO(
                 openCount,
                 priorityCount,

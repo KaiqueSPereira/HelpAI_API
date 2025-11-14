@@ -1,73 +1,135 @@
+// Em src/main/java/com/example/helpai_backend/entity/Chamado.java
 package com.example.helpai_backend.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Transient; // Import para campos virtuais
 
 @Entity 
 @Table(name = "Chamado") 
 public class Chamado {
 
- @Id 
- private Integer id_chamado;
- @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // O Banco de Dados gera o ID
+    @Column(name = "id_chamado")
+    private Integer idChamado;
 
- private String titulo;
- private String descricao;
- private String categoria;
- private String prioridade;
- 
- @Column(name = "status_chamado")
- private String status_chamado;
- 
- // Foreign Keys
- @Column(name = "id_usuario_solicitante")
- private Integer id_usuario_solicitante;
- @Column(name = "id_tecnico_responsavel")
- private Integer id_tecnico_responsavel;
- @Column(name = "id_gerente_supervisor")
- private Integer id_gerente_supervisor;
+    @Column(name = "titulo")
+    private String titulo;
 
- public Chamado() {}
+    @Column(name = "descricao")
+    private String descricao;
+    
+    @Column(name = "categoria")
+    private String categoria;
 
- public Integer getId_chamado() { return id_chamado; }
- public void setId_chamado(Integer id_chamado) { this.id_chamado = id_chamado; }
+    @Column(name = "prioridade")
+    private String prioridade;
+    
+    @Column(name = "status_chamado") // Mapeia o campo Java 'statusChamado'
+    private String statusChamado; 
+    
+    @Column(name = "id_usuario_solicitante")
+    private Integer idUsuarioSolicitante; 
+    
+    @Column(name = "id_tecnico_responsavel")
+    private Integer idTecnicoResponsavel;
+    
+    @Column(name = "id_gerente_supervisor")
+    private Integer idGerenteSupervisor;
 
- public String getTitulo() { return titulo; }
- public void setTitulo(String titulo) { this.titulo = titulo; }
- 
- public String getDescricao() {return descricao; }
- public void setDescricao(String descricao) {this.descricao = descricao;}
- 
- public String getCategoria() {return categoria; }
- public void setCategoria(String categoria) {this.categoria= categoria;}
- 
- public String getPrioridade() {return prioridade; }
- public void setPrioridade(String prioridade) {this.prioridade = prioridade;}
- 
- public String getStatatus_Chamado() {return status_chamado; }
- public void setStatus_Chamado(String status_chamado) {this.status_chamado= status_chamado;}
- 
- public Integer getId_usuario_solicitante() { return id_usuario_solicitante; }
- public void setId_usuario_solicitante(Integer id_usuario_solicitante) { this.id_usuario_solicitante = id_usuario_solicitante; }
+    // --- CAMPOS VIRTUAIS ---
+    @Transient // Diz ao JPA para ignorar este campo ao salvar
+    private String nomeUsuario;
 
- public Integer getId_tecnico_responsavel() {
-	return id_tecnico_responsavel;
- }
+    @Transient 
+    private String nomeTecnico;
+    
+    // Construtor vazio (necessário para o Hibernate/JPA)
+    public Chamado() {}
 
- public void setId_tecnico_responsavel(Integer id_tecnico_responsavel) {
-	this.id_tecnico_responsavel = id_tecnico_responsavel;
- }
+    // --- GETTERS E SETTERS COMPLETOS ---
 
- public Integer getId_gerente_supervisor() {
-	return id_gerente_supervisor;
- }
+    public Integer getIdChamado() {
+        return idChamado;
+    }
 
- public void setId_gerente_supervisor(Integer id_gerente_supervisor) {
-	this.id_gerente_supervisor = id_gerente_supervisor;
- }
- 
+    public void setIdChamado(Integer idChamado) {
+        this.idChamado = idChamado;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public String getPrioridade() {
+        return prioridade;
+    }
+
+    public void setPrioridade(String prioridade) {
+        this.prioridade = prioridade;
+    }
+
+    public String getStatusChamado() {
+        return statusChamado;
+    }
+
+    public void setStatusChamado(String statusChamado) {
+        this.statusChamado = statusChamado;
+    }
+
+    public Integer getIdUsuarioSolicitante() {
+        return idUsuarioSolicitante;
+    }
+
+    public void setIdUsuarioSolicitante(Integer idUsuarioSolicitante) {
+        this.idUsuarioSolicitante = idUsuarioSolicitante;
+    }
+
+    public Integer getIdTecnicoResponsavel() {
+        return idTecnicoResponsavel;
+    }
+
+    public void setIdTecnicoResponsavel(Integer idTecnicoResponsavel) {
+        this.idTecnicoResponsavel = idTecnicoResponsavel;
+    }
+
+    public Integer getIdGerenteSupervisor() {
+        return idGerenteSupervisor;
+    }
+
+    public void setIdGerenteSupervisor(Integer idGerenteSupervisor) {
+        this.idGerenteSupervisor = idGerenteSupervisor;
+    }
+    
+    // Getters/Setters para os campos virtuais
+    public String getNomeUsuario() { return nomeUsuario; }
+    public void setNomeUsuario(String nomeUsuario) { this.nomeUsuario = nomeUsuario; }
+
+    public String getNomeTecnico() { return nomeTecnico; }
+    public void setNomeTecnico(String nomeTecnico) { this.nomeTecnico = nomeTecnico; }
 }
