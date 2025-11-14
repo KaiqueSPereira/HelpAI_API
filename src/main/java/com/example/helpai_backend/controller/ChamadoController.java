@@ -1,4 +1,4 @@
-// Em src/main/java/com/example/helpai-backend/controller/ChamadoController.java
+// Em src/main/java/com/example/helpai_backend/controller/ChamadoController.java
 package com.example.helpai_backend.controller;
 
 import com.example.helpai_backend.entity.Chamado;
@@ -6,12 +6,17 @@ import com.example.helpai_backend.service.ChamadoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/chamados") // Mapeia todas as URLs com /chamados
+@RequestMapping("/chamados") 
 public class ChamadoController {
 
     @Autowired
@@ -19,22 +24,20 @@ public class ChamadoController {
 
     /**
      * Endpoint: GET /chamados
-     * Chamado pela TicketsActivity. Retorna todos os chamados.
+     * Permite a filtragem por status e perfil (chamado pela TicketsActivity).
+     * Nota: O back-end agora retorna dados não filtrados para o app filtrar localmente,
+     * mas está pronto para a lógica de filtragem SQL avançada.
      */
     @GetMapping
-    public ResponseEntity<List<Chamado>> getFilteredChamados(
+    public ResponseEntity<List<Chamado>> getAllChamados(
             @RequestParam(required = false, name = "status") String status,
             @RequestParam(required = false, name = "perfil") Integer perfil,
             @RequestParam(required = false, name = "solicitanteId") Integer solicitanteId) {
 
-        // 1. Lógica para buscar dados (por enquanto retorna todos, mas o Service está pronto)
-        List<Chamado> chamados = chamadoService.findFiltered(
-                perfil != null ? perfil : -1, // -1 se for nulo
-                status != null ? status : "ALL",
-                solicitanteId
-        );
+        // O Service retorna a lista completa (ou com filtros simples)
+        List<Chamado> chamados = chamadoService.findAll(); 
 
-        // 2. Retorna HTTP 200 OK
+        // Retorna HTTP 200 OK com os dados
         return ResponseEntity.ok(chamados);
     }
 
@@ -44,9 +47,7 @@ public class ChamadoController {
      */
     @PostMapping
     public ResponseEntity<Chamado> createChamado(@RequestBody Chamado chamado) {
-        // O Service adiciona o ID, a prioridade (IA), o status e o solicitante
         Chamado novoChamado = chamadoService.createChamado(chamado);
-        // Retorna HTTP 201 CREATED
         return ResponseEntity.status(HttpStatus.CREATED).body(novoChamado);
     }
 }

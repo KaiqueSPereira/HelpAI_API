@@ -1,8 +1,11 @@
 package com.example.helpai_backend.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
 @Entity 
 @Table(name = "Chamado") 
@@ -10,22 +13,26 @@ public class Chamado {
 
  @Id 
  private Integer id_chamado;
+ @GeneratedValue(strategy = GenerationType.IDENTITY)
 
  private String titulo;
  private String descricao;
  private String categoria;
  private String prioridade;
+ 
+ @Column(name = "status_chamado")
  private String status_chamado;
  
  // Foreign Keys
+ @Column(name = "id_usuario_solicitante")
  private Integer id_usuario_solicitante;
+ @Column(name = "id_tecnico_responsavel")
  private Integer id_tecnico_responsavel;
+ @Column(name = "id_gerente_supervisor")
  private Integer id_gerente_supervisor;
 
  public Chamado() {}
 
- // Você deve adicionar todos os Getters e Setters para todos os campos.
- // Exemplo:
  public Integer getId_chamado() { return id_chamado; }
  public void setId_chamado(Integer id_chamado) { this.id_chamado = id_chamado; }
 
@@ -62,7 +69,5 @@ public class Chamado {
  public void setId_gerente_supervisor(Integer id_gerente_supervisor) {
 	this.id_gerente_supervisor = id_gerente_supervisor;
  }
- 
-
  
 }

@@ -7,46 +7,51 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Random;
 
-
-
-@Service
+@Service 
 public class ChamadoService {
 
     @Autowired
     private ChamadoRepository chamadoRepository;
 
     /**
-     * Retorna todos os chamados para a TicketsActivity.
+     * Retorna todos os chamados.
      */
-    public List<Chamado> findFiltered(int perfil, String status, Integer solicitanteId) {
-        // No mundo real, esta lógica seria traduzida em uma query SQL dinâmica.
-        // Por enquanto, vamos retornar todos os chamados e deixar o app filtrar, mas o endpoint
-        // está pronto para a regra de negócio correta ser implementada aqui.
+    public List<Chamado> findAll() {
         return chamadoRepository.findAll();
     }
 
     /**
-     * Recebe um chamado novo do app e aplica a lógica de triagem e IA (simulada).
+     * Recebe um chamado novo do app e aplica a lógica de atribuição de status.
      */
     public Chamado createChamado(Chamado novoChamado) {
-        // 1. Geração de ID (Chave Primária) - (No mundo real, o banco faria isso)
-        novoChamado.setId_chamado(new Random().nextInt(1000000));
         
-        // 2. Classificação de Prioridade pela IA 
-        //    (Aqui o Spring faria uma chamada para o Gemini para classificar)
-        if (novoChamado.getTitulo().toLowerCase().contains("erro")) {
-            novoChamado.setPrioridade("Alta"); // Simulação
-            novoChamado.setId_tecnico_responsavel(12); // Atribui um técnico (hardware)
-        } else {
-            novoChamado.setPrioridade("Média");
-            novoChamado.setId_tecnico_responsavel(10); // Atribui outro técnico (redes)
+        // 1. Lógica de Validação:
+        if (novoChamado.getTitulo() == null || novoChamado.getDescricao() == null) {
+            throw new IllegalArgumentException("Título e descrição são obrigatórios.");
         }
         
-        // 3. Define Status Inicial e Solicitante (Simulação)
-        novoChamado.setStatus_Chamado("Aberto");
-        novoChamado.setId_usuario_solicitante(1); // Simula que o usuário logado é o ID 1
+        // 2. ATRIBUIÇÃO INICIAL (APENAS LÓGICA)
+        
+        // **CORRIGIDO**
+        // O status é checado usando getStatus_chamado() e definido usando setStatus_chamado()
+        if (novoChamado.getstatus_chamado() == null || novoChamado.getStatus_chamado().isEmpty()) {
+            novoChamado.setStatus_chamado("Aberto");
+        }
+        
+        // **CORRIGIDO**
+        // Prioridade inicial definida para pendente de IA, conforme regra 2.3.2
+        if (novoChamado.getPrioridade() == null || novoChamado.getPrioridade().isEmpty()) {
+             novoChamado.setPrioridade("Triagem Pendente"); 
+        }
+
+        // Técnico, Gerente e Solicitante (pendente de autenticação JWT real)
+        if (novoChamado.getIdUsuarioSolicitante() == null || novoChamado.getIdUsuarioSolicitante() == 0) {
+            novoChamado.setIdUsuarioSolicitante(1); 
+        }
+        
+        novoChamado.setIdTecnicoResponsavel(null);
+        novoChamado.setIdGerenteSupervisor(null);
         
         // 4. Salva no banco de dados Azure
         return chamadoRepository.save(novoChamado);

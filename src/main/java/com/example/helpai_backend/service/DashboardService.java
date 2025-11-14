@@ -19,20 +19,19 @@ public class DashboardService {
         Integer inProgressCount = chamadoRepository.countInProgressTickets();
         Integer totalCount = chamadoRepository.countTotalTickets();
 
-        // Garante que não há nulos
+        // 2. CORREÇÃO CRÍTICA: Garante que os valores NULL sejam tratados como 0 (ZERO)
         if (openCount == null) openCount = 0;
         if (priorityCount == null) priorityCount = 0;
         if (inProgressCount == null) inProgressCount = 0;
         if (totalCount == null) totalCount = 0;
 
-        // 2. Lógica de Negócio (cálculo de porcentagem)
+        // 3. Lógica de Negócio (cálculo de porcentagem)
         int progressPercentage = 0;
         if (totalCount > 0) {
-            // A porcentagem de progresso será 'Chamados em Atendimento' / 'Total'
             progressPercentage = (inProgressCount * 100) / totalCount;
         }
 
-        // 3. Retorna o DTO com os resultados
+        // 4. Retorna o DTO com os resultados
         return new DashboardStatsDTO(
                 openCount,
                 priorityCount,
